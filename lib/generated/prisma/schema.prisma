@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model grades {
+  id    Int    @id
+  grade String @db.VarChar(10)
+}
+
+model students {
+  id      Int     @id @default(autoincrement())
+  name    String  @db.VarChar(20)
+  grade   String  @db.VarChar(20)
+  address String? @db.VarChar(50) // optional by default; remove '?' if not null
+  contact String? @db.VarChar(11) // optional by default; remove '?' if not null
+}

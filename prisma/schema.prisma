@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model grades {
+  id    Int    @id
+  grade String @db.VarChar(10)
+}
+
+model students {
+  id         Int          @id @default(autoincrement())
+  name       String       @db.VarChar(20)
+  grade      String       @db.VarChar(20)
+  address    String?      @db.VarChar(50)
+  contact    String?      @db.VarChar(11)
+
+  attendance Attendance[] @relation("StudentAttendance") // 👈 Relation
+}
+
+model Attendance {
+  id         Int     @id @default(autoincrement())
+  studentId  Int
+  present    Boolean @default(false)
+  day        Int
+  date       String  @db.VarChar(20)
+
+  student    students @relation("StudentAttendance", fields: [studentId], references: [id]) // 👈 Relation
+}
+
+
+
