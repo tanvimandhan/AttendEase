@@ -18,10 +18,10 @@ function PieChartcom({attendanceList}) {
     const [data,setData]=useState([])
     useEffect(()=>{
          if(attendanceList){
-            const totalstuden=getUniqueRecord(attendanceList);
+            const totalstuden=getUniqueRecord(attendanceList.data);
             //setTotalStudent(totalstuden.length);
             const today=moment().format('D');
-            const PresentPercentage=(attendanceList.length/(totalstuden.length*Number(today))*100);
+            const PresentPercentage=(attendanceList.data.length/(totalstuden.length*Number(today))*100);
             setData([
                 {
                     name:'Total Present',

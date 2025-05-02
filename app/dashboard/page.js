@@ -1,7 +1,7 @@
 "use client"
 import { useTheme } from 'next-themes'
 import React, { useEffect, useState } from 'react'
-import Student from './Students/page'
+import Student from './student/page'
 import MonthSelection from '../_components/MonthSelection'
 import GradeSelect from '../_components/GradeSelect'
 import GlobalApi from '../_services/GlobalApi'
@@ -34,12 +34,29 @@ function page() {
       })
     }
 
-    const GetTotalPresentCountbyDay=()=>{
-      GlobalApi.TotalPresentCountbyDay(moment(selectedMonth).format('MM/yyyy'),selectedGrade)
-      .then(resp=>{
-         setTotalPresent(resp.data)
-      })
-    }
+    const GetTotalPresentCountbyDay = () => {
+      if (!selectedMonth || !selectedGrade) {
+        console.warn("Month or grade not selected");
+        return;
+      }
+    
+      const formattedMonth = moment(selectedMonth).format('MM/yyyy');
+    
+      GlobalApi.TotalPresentCountbyDay(formattedMonth, selectedGrade)
+        .then(resp => {
+          if (resp?.data) {
+            setTotalPresent(resp.data);
+          } else {
+            console.warn("Empty or unexpected response:", resp);
+            setTotalPresent([]);
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching present count by day:", error);
+          setTotalPresent([]);
+        });
+    };
+    
   return (
     <div className='p-10'>
        {/* <Student/> */}

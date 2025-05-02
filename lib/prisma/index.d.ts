@@ -4213,7 +4213,7 @@ export namespace Prisma {
 
   export type studentsCreateInput = {
     name: string
-    grade: string
+    grade?: string
     address?: string | null
     contact?: string | null
     attendance?: AttendanceCreateNestedManyWithoutStudentInput
@@ -4222,7 +4222,7 @@ export namespace Prisma {
   export type studentsUncheckedCreateInput = {
     id?: number
     name: string
-    grade: string
+    grade?: string
     address?: string | null
     contact?: string | null
     attendance?: AttendanceUncheckedCreateNestedManyWithoutStudentInput
@@ -4248,7 +4248,7 @@ export namespace Prisma {
   export type studentsCreateManyInput = {
     id?: number
     name: string
-    grade: string
+    grade?: string
     address?: string | null
     contact?: string | null
   }
@@ -4811,7 +4811,7 @@ export namespace Prisma {
 
   export type studentsCreateWithoutAttendanceInput = {
     name: string
-    grade: string
+    grade?: string
     address?: string | null
     contact?: string | null
   }
@@ -4819,7 +4819,7 @@ export namespace Prisma {
   export type studentsUncheckedCreateWithoutAttendanceInput = {
     id?: number
     name: string
-    grade: string
+    grade?: string
     address?: string | null
     contact?: string | null
   }

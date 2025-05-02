@@ -1,10 +1,12 @@
-import { PrismaClient } from '@/lib/generated/prisma'
-const prisma = new PrismaClient()
+
+// import { PrismaClient } from '@/lib/generated/prisma'
+// const prisma = new PrismaClient()
+import { prisma } from '@/lib/prisma'; 
 import { NextResponse } from 'next/server';
 
 export async function POST(req){
     const datai=await req.json();
-    
+    //console.log(datai);
     const newUser = await prisma.students.create({
         data: {
           name: datai?.name,
