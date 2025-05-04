@@ -21,11 +21,12 @@ function page() {
     // useEffect(()=>{
     //     setTheme('dark')
     // },[])
-    useEffect(()=>{
-      GetTotalPresentCountbyDay();
-      getStudentAttendance();
-      
-    },[selectedMonth || selectedGrade])
+    useEffect(() => {
+      if (selectedMonth && selectedGrade) {
+        GetTotalPresentCountbyDay();
+        getStudentAttendance();
+      }
+    }, [selectedMonth, selectedGrade]); // Fixed dependency array
     
     const getStudentAttendance=()=>{
       GlobalApi.GetAttendanceList(selectedGrade,moment(selectedMonth).format('MM/yyyy'))
@@ -45,6 +46,8 @@ function page() {
       GlobalApi.TotalPresentCountbyDay(formattedMonth, selectedGrade)
         .then(resp => {
           if (resp?.data) {
+            console.log(resp.data);
+
             setTotalPresent(resp.data);
           } else {
             console.warn("Empty or unexpected response:", resp);
@@ -62,24 +65,30 @@ function page() {
        {/* <Student/> */}
        <div className='flex items-center justify-between'>
           <h2 className='font-bold text-2xl'>Dashboard</h2>
-          <div className='flex items-center gap-4'>
+          <div className="flex flex-col md:flex-row w-full md:w-65">
+            <div className="w-48">
               <MonthSelection selectedMonth={setSelectedMonth} />
-              <GradeSelect selectedGrade={setSelectedGrade}/>
-              
+            </div>
+            <div className="w-48">
+              <GradeSelect selectedGrade={setSelectedGrade} />
+            </div>
           </div>
+
        </div>
        <StatusList attendanceList={attendanceList}/>
-       <div className='grid grid-cols-1 md:grid-cols-3 gap-5'>
-        <div className='md:col-span-2'>
-          <BarChartcom attendanceList={attendanceList} totalPresent={totalPresent}/>
+       <div className='grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch'>
+        <div className='md:col-span-2 h-full'>
+          <div className='bg-white p-4 shadow-md rounded-xl h-full'>
+            <BarChartcom attendanceList={attendanceList} totalPresent={totalPresent} />
+          </div>
         </div>
-        <div>
-          <PieChartcom attendanceList={attendanceList}/>
+        <div className='md:col-span-1 h-full'>
+          <div className='bg-white p-4 shadow-md rounded-xl h-full'>
+            <PieChartcom attendanceList={attendanceList} />
+          </div>
         </div>
-        <div>
+      </div>
 
-        </div>
-       </div>
     </div>
   )
 }

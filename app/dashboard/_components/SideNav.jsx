@@ -48,7 +48,7 @@ function SideNav() {
       <hr className='my-5'/>
         {menuList.map((menu,index)=>(
           <Link  key={menu.id} href={menu.path}>
-          <h2  className={`flex items-center gap-3 text-md p-4 text-slate-500 hover:bg-blue-700 hover:text-white cursor-pointer rounded-lg my-2 ${path==menu.path && 'bg-primary text-white'}`}>
+          <h2  className={`flex items-center gap-3 text-md p-4 text-slate-500 hover:bg-blue-700 hover:text-white cursor-pointer rounded-lg my-2 ${path === menu.path ? 'bg-blue-700 text-white' : ''}`}>
             <menu.icon/>
             {menu.name}
           </h2>

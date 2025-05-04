@@ -7,6 +7,7 @@ import {useState} from 'react'
 import AttendanceGrid from './_components/AttendanceGrid'
 import { Button } from '@/components/ui/button'
 import StatusList from '../_components/StatusList'
+import moment from 'moment'
 
 function Attendance() {
   const [selectedMonth,setSelectedMonth]=useState();
@@ -25,11 +26,14 @@ function Attendance() {
     }
   
     const month = moment(selectedMonth).format('MM/YYYY');
+    //console.log(2);
     GlobalApi.GetAttendanceList(selectedGrade, month).then(resp => {
       console.log("API Response:", resp);
       console.log(resp.data);
+      //console.log(1);
       setAttendanceList(resp.data || []);
     });
+    //console.log(3);
   };
   return (
     <div>
@@ -49,7 +53,7 @@ function Attendance() {
             </div>
         </div>
         <AttendanceGrid attendanceList={attendanceList} selectedMonth={selectedMonth}/>
-        <StatusList attendanceList={attendanceList}/>
+        {/* <StatusList attendanceList={attendanceList}/> */}
     </div>
    
   )

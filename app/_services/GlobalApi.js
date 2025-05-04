@@ -15,7 +15,14 @@ const GetAttendanceList = (grade, month) => {
 const MarkAttendance=(data)=>axios.post('/api/attendance',data);
 
 const MarkAbsent = (studentId, day, date) =>
-    axios.delete(`/api/attendance?studentId=${studentId}&day=${day}&date=${date}`);
+    axios.delete(`/api/attendance`, {
+        params: {
+            studentId: studentId,
+            day: day,
+            date: date
+        }
+});
+
 const TotalPresentCountbyDay = (date, grade="5") => {
     // Only make the request if grade is defined
     if (!grade) {

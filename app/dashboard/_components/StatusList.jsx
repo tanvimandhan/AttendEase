@@ -29,10 +29,10 @@ function StatusList({attendanceList}) {
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-6'>
         <Card 
-  icon={<div className="w-6 h-6"><GraduationCap /></div>}
-  title={'Total student'} 
-  value={PresentPercentage}
-/>
+          icon={<div className="w-6 h-6"><GraduationCap /></div>}
+          title={'Total student'} 
+          value={PresentPercentage}
+        />
         <Card icon={<TrendingUp/>} title={'Total present'} value={PresentPercentage.toFixed(1)+'%'}/>
         <Card icon={<TrendingDown/>} title={'Total absent'} value={100-PresentPercentage.toFixed(1)+'%'}/>
     </div>

@@ -30,7 +30,9 @@ export async function GET(req) {
 
 export async function POST(req) {
     const data = await req.json();
-  
+    if (typeof data.day !== 'number') {
+      data.day = Number(data.day);
+  }
     const result = await prisma.attendance.create({
       data: {
         studentId: data.studentId,
@@ -48,16 +50,49 @@ export async function DELETE(req) {
   const studentId = searchParams.get("studentId");
   const date = searchParams.get("date");
   const day = searchParams.get("day");
+  const studentIdNumber = parseInt(studentId);
+  // Validate required parameters
+  if (!studentId || !date || !day) {
+    return NextResponse.json(
+      { error: "Missing required parameters: studentId, date, or day" },
+      { status: 400 }
+    );
+  }
 
-  const result = await prisma.attendance.deleteMany({
-    where: {
-      studentId: studentId ?? undefined,
-      date: date ?? undefined,
-      day: day ?? undefined,
-    },
-  });
+  try {
+    // Convert day to number since it's likely stored as Int in DB
+    const dayNumber = parseInt(day);
+    if (isNaN(dayNumber)) {
+      return NextResponse.json(
+        { error: "Day must be a number" },
+        { status: 400 }
+      );
+    }
 
-  return NextResponse.json(result);
+    const result = await prisma.attendance.deleteMany({
+      where: {
+        studentId: studentIdNumber,
+        date: date,
+        day: dayNumber, // Use the converted number
+      },
+    });
+
+    // Check if any records were actually deleted
+    if (result.count === 0) {
+      return NextResponse.json(
+        { error: "No matching attendance record found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error("Error deleting attendance record:", error);
+    return NextResponse.json(
+      { error: "Failed to delete attendance record" },
+      { status: 500 }
+    );
+  }
 }
 
 // .from(STUDENTS).LEFTJOIN(ATTENDANCE,and(eq(STUDENTS.id,ATTENDANCE.studentId),eq(ATTENDANCE.date,month)))

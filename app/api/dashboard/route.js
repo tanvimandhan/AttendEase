@@ -6,9 +6,8 @@ import { prisma } from '@/lib/prisma';
 export async function GET(req) {
   const searchParams = req.nextUrl.searchParams;
   const date = searchParams.get('date');
-  const grade = searchParams.get('grade') ||"5";
+  const grade = searchParams.get('grade') || "5";
 
-  // Fetch attendance joined with student
   const records = await prisma.attendance.findMany({
     where: {
       date,
@@ -23,18 +22,21 @@ export async function GET(req) {
 
   // Group by day and count present
   const grouped = {};
-  for (const record of records) {
-    if (!grouped[record.day]) grouped[record.day] = 0;
-    if (record.present) grouped[record.day]++;
-  }
+  records.forEach(record => {
+    if (!grouped[record.day]) {
+      grouped[record.day] = { present: 0, total: 0 };
+    }
+    grouped[record.day].total++;
+    if (record.present) grouped[record.day].present++;
+  });
 
   const result = Object.entries(grouped)
-    .map(([day, presentCount]) => ({
+    .map(([day, counts]) => ({
       day: parseInt(day),
-      presentCount
+      presentCount: counts.present,
+      absentCount: counts.total - counts.present
     }))
-    .sort((a, b) => b.day - a.day)
-    .slice(0, 7);
+    .sort((a, b) => a.day - b.day); // Sort ascending for chronological order
 
   return NextResponse.json(result);
 }
